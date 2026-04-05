@@ -9,7 +9,7 @@ export interface VocabWord {
   word: string
   meaning: string
   phonetic: string // syllable breakdown e.g. "c-a-t"
-  image: string // emoji or sprite URL
+  pokemonId: number // PokeAPI Pokemon ID for sprite
   level: 'A' | 'B' | 'C' // RAZ level
 }
 
