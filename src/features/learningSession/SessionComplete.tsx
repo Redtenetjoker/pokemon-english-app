@@ -10,79 +10,87 @@ interface Props {
 }
 
 const SessionComplete: React.FC<Props> = ({ pokemon, correctCount, wrongCount, mode, onContinue }) => {
-  const [showPokemon, setShowPokemon] = useState(false)
-  const [showText, setShowText] = useState(false)
-  const [showButton, setShowButton] = useState(false)
+  const [phase, setPhase] = useState<'loading' | 'hatching' | 'reveal'>('loading')
 
   const total = correctCount + wrongCount
   const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0
 
   useEffect(() => {
-    const t1 = setTimeout(() => setShowPokemon(true), 300)
-    const t2 = setTimeout(() => setShowText(true), 1000)
-    const t3 = setTimeout(() => setShowButton(true), 1800)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
+    const t1 = setTimeout(() => setPhase('hatching'), 500)
+    const t2 = setTimeout(() => setPhase('reveal'), 2500)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
-  const accuracyColor = accuracy >= 80 ? 'text-green-600' : accuracy >= 60 ? 'text-yellow-600' : 'text-red-600'
-
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-lg mx-auto p-4">
-      {/* Trophy */}
-      <div className="text-6xl animate-bounce">🏆</div>
+    <div className="min-h-screen flex flex-col relative">
+      {/* Background */}
+      <img
+        src="/images/study-bg.png"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
+      />
 
-      {/* Title */}
-      <h1 className="text-3xl font-bold text-gray-800 text-center">
-        {mode === 'short' ? '学习完成！' : '闯关成功！'}
-      </h1>
+      <div className="relative flex-1 flex flex-col items-center justify-center px-5 py-8 z-10">
+        {/* Trophy */}
+        <img 
+          src={phase === 'reveal' ? '/images/celebrate.png' : '/images/studying.png'}
+          alt=""
+          className={`w-40 h-40 object-contain mb-4 ${phase === 'reveal' ? 'animate-bounce' : 'opacity-50'}`}
+        />
 
-      {/* Stats */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg w-full">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-3xl font-bold text-green-600">{correctCount}</div>
-            <div className="text-sm text-gray-500">答对</div>
+        {/* Title */}
+        <h1 className="text-2xl font-bold text-white mb-6">
+          {mode === 'short' ? '学习完成！' : '闯关成功！'}
+        </h1>
+
+        {/* Stats */}
+        <div className="flex gap-4 mb-6">
+          <div className="bg-white/20 rounded-xl px-5 py-3 text-center">
+            <div className="text-2xl font-bold text-white">{correctCount}</div>
+            <div className="text-white/60 text-sm">答对</div>
           </div>
-          <div>
-            <div className="text-3xl font-bold text-red-500">{wrongCount}</div>
-            <div className="text-sm text-gray-500">答错</div>
+          <div className="bg-white/20 rounded-xl px-5 py-3 text-center">
+            <div className="text-2xl font-bold text-white">{wrongCount}</div>
+            <div className="text-white/60 text-sm">答错</div>
           </div>
-          <div>
-            <div className={`text-3xl font-bold ${accuracyColor}`}>{accuracy}%</div>
-            <div className="text-sm text-gray-500">正确率</div>
+          <div className="bg-[#FFCB05] rounded-xl px-5 py-3 text-center">
+            <div className="text-2xl font-bold text-[#3B5FA8]">{accuracy}%</div>
+            <div className="text-[#3B5FA8]/60 text-sm">正确率</div>
           </div>
         </div>
-      </div>
 
-      {/* Pokemon Reward */}
-      <div className={`transition-all duration-700 ${showPokemon ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}>
-        <div className="bg-yellow-50 rounded-3xl p-6 border-4 border-yellow-300 shadow-xl">
-          <p className="text-center text-yellow-700 font-semibold mb-2">🎁 获得新Pokemon!</p>
+        {/* Pokemon Reward */}
+        <div className={`
+          bg-white rounded-xl p-6 flex flex-col items-center
+          ${phase === 'hatching' ? 'animate-[shake_0.3s_ease-in-out_infinite]' : ''}
+        `}>
+          {pokemon.isNew && (
+            <img src="/images/badge-gold.png" alt="new" className="w-12 h-12 object-contain mb-2" />
+          )}
           <img
-            src={pokemon.image}
+            src={phase === 'loading' ? '/images/studying.png' : pokemon.image}
             alt={pokemon.nameCn}
-            className="w-40 h-40 mx-auto"
+            className={`w-32 h-32 object-contain transition-all ${phase !== 'reveal' ? 'opacity-30' : ''}`}
           />
-          <p className="text-center text-2xl font-bold text-gray-800 mt-2">{pokemon.nameCn}</p>
+          <p className="text-lg font-bold text-gray-800 mt-2">{pokemon.nameCn}</p>
+          <p className="text-gray-400 text-sm">#{String(pokemon.id).padStart(3, '0')}</p>
         </div>
-      </div>
 
-      {/* Encouragement */}
-      {showText && (
-        <p className="text-xl text-gray-600 text-center animate-pulse">
-          继续加油！你越来越厉害了！💪
+        {/* Encouragement */}
+        <p className="text-white/80 text-center mt-6">
+          {accuracy >= 80 ? '太厉害了！你是个小学霸！' : 
+           accuracy >= 60 ? '做得不错！继续加油！' : 
+           '别灰心，多练习就会越来越好！'}
         </p>
-      )}
 
-      {/* Continue button */}
-      {showButton && (
+        {/* Continue button */}
         <button
           onClick={onContinue}
-          className="w-full max-w-xs bg-green-500 hover:bg-green-600 text-white text-xl font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-200 active:scale-95"
+          className="mt-8 w-full max-w-xs bg-[#FFCB05] text-[#3B5FA8] font-bold py-4 rounded-xl active:scale-95 transition-transform"
         >
-          继续 🏠
+          继续
         </button>
-      )}
+      </div>
     </div>
   )
 }

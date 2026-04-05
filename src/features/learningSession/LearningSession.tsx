@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import { useQuizSession, generateQuizQuestions } from '../../hooks/useQuizSession'
+import type { QuizMode } from '../../hooks/useQuizSession'
 import { getRandomPokemonId, getPokemonData } from '../../services/pokemon'
 import { addPokemon, incrementTodayProgress } from '../../services/db'
 import { razWords } from '../../data/words'
@@ -21,8 +22,10 @@ const LearningSession: React.FC<Props> = ({ onComplete }) => {
 
   const startSession = useCallback((mode: SessionMode) => {
     const count = QUESTION_COUNTS[mode]
-    const words = razWords.slice(0, Math.min(count * 2, razWords.length)) // Get pool of words
-    const questions = generateQuizQuestions(words, count)
+    // Use mixed mode for variety: en2cn, cn2en, mixed
+    const quizMode: QuizMode = 'mixed'
+    const words = razWords.slice(0, Math.min(count * 2, razWords.length))
+    const questions = generateQuizQuestions(words, count, quizMode)
     dispatch({ type: 'START_SESSION', mode, questions })
   }, [dispatch])
 

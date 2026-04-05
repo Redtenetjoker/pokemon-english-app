@@ -10,7 +10,7 @@ export interface VocabWord {
   meaning: string
   phonetic: string // syllable breakdown e.g. "c-a-t"
   pokemonId: number // PokeAPI Pokemon ID for sprite
-  level: 'A' | 'B' | 'C' // RAZ level
+  level: 'A' | 'B' | 'C' | 'D' | 'E' // RAZ level
 }
 
 // FSRS Card state stored in IndexedDB
@@ -41,8 +41,10 @@ export type SessionMode = 'short' | 'long'
 
 export interface QuizQuestion {
   vocab: VocabWord
-  options: string[] // 4 choices (meanings)
+  options: string[] // 4 choices
   correctIndex: number
+  mode?: 'en2cn' | 'cn2en' | 'mixed'
+  questionText?: string
 }
 
 export type QuizPhase = 

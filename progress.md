@@ -1,95 +1,28 @@
-# Pokemon 英语学习 App - 开发进度
+# Progress: Pokemon英语App - 全面优化
 
-## 当前版本: v2.0 (80% 完成度) 🎉
+## 19:50 - 任务启动
+- 胡逸辰要求：继续完善，单词库少，单词和配图关联性差，需要组内评估后全面优化
+- 已创建 task_plan.md
+- 已向胡逸辰发送 AUQ 确认5个关键设计决策
 
-### ✅ 已完成功能
+## 20:00 - 收到胡逸辰回复，开始实施
 
-#### 1. Pokemon 精灵图替换 emoji ✅
-- 每个词汇关联 Pokemon ID (1-151)
-- 使用 PokeAPI sprites URL 显示真实 Pokemon 图片
-- 图片在 GameScreen 中以圆形卡片展示
+### 胡逸辰确认的设计决策
+- 问题1（词汇量）：A - 200词（RAZ B-C核心词）
+- 问题2（配图数量）：A - 每个词1张
+- 问题3（绑定策略）：A - 语义关联
+- 问题4（Quiz配图）：A - 需要显示配图
+- 问题5（收集机制）：B - 答对X题解锁Pokemon
 
-#### 2. UI 优化（适合7岁半孩子）✅
-- 主色调: Pokemon 黄 `#FFCB05` + 蓝色渐变背景
-- 卡片: 大圆角 (`rounded-3xl`)、大阴影、白色卡片
-- 按钮: 大尺寸 (`min-h-[70px]`)、圆角 (`rounded-3xl`)
-- 字体: 18pt 基础字体，保证可读性
-- 答题选项: 每个选项有 Pokemon 颜色背景区分 (红/蓝/绿/紫)
+### 已完成
+- [x] 词汇从120词扩展到200词（Level A-E 各40词）
+- [x] 语义关联重建：fire→小火龙(4), sing→胖丁(39), swim→蚊香蛙(60)等
+- [x] VocabWord类型扩展支持Level D/E
+- [x] Quiz界面加入Pokemon TCG卡片 + 单词配图
+- [x] getWordImageUrl() 支持单词配图获取
+- [x] 构建成功，部署已触发
 
-#### 3. 动画效果 ✅
-- 答对: 🎉 动画 + 绿色高亮 + bounce 效果
-- 答错: 🤔 动画 + 轻微震动效果 (shake)
-- 进度条: 平滑过渡动画 (transition-all duration-500)
-- 使用纯 CSS transition 和 @keyframes
-
-#### 4. Pokemon 收集/解锁动画 ✅
-- 答题全部正确后获得 Pokemon 时的孵化动画
-- CSS animation 模拟摇晃效果 (hatch-shake)
-- Pokemon 图片有弹跳入场动画 (pokemon-appear)
-- 3阶段动画: loading → hatching → reveal
-
-#### 5. 词汇扩充 ✅
-- 从 56 词扩充到 120 词
-- RAZ Level A-C 各 40 词
-- 每个词关联一个 Pokemon ID (按顺序分配)
-
-#### 6. 家长端优化 ✅
-- 显示更清晰的统计数据
-- 简洁的进度图表
-
-### 📊 项目统计
-
-- **总词汇量**: 120 词 (Level A: 40, Level B: 40, Level C: 40)
-- **Pokemon 数量**: 151 (可收集)
-- **支持的 Pokemon ID 范围**: 1-151
-- **技术栈**: React + TypeScript + Vite + TailwindCSS + PWA
-
-### 🔧 技术实现
-
-- **Pokemon 图片**: PokeAPI sprites CDN
-  - URL: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png`
-- **动画库**: 无 (纯 CSS @keyframes)
-- **状态管理**: React hooks + IndexedDB
-- **复习算法**: FSRS (Free Spaced Repetition)
-
-### 📁 核心文件
-
-| 文件 | 描述 |
-|------|------|
-| `src/data/words.ts` | 120词汇 + Pokemon ID 映射 |
-| `src/types/index.ts` | VocabWord 类型 (pokemonId) |
-| `src/features/learningSession/GameScreen.tsx` | 游戏界面 + Pokemon 图片 |
-| `src/features/learningSession/SessionComplete.tsx` | 完成界面 + 孵化动画 |
-| `src/features/pets/Pets.tsx` | Pokemon 图鉴页面 |
-| `src/index.css` | 自定义 CSS 动画 |
-| `src/App.tsx` | 首页 + Pokemon 主题 UI |
-
-### 🚀 部署信息
-
-- **GitHub Pages**: https://redtenetjoker.github.io/pokemon-english-app/
-- **GitHub Repo**: https://github.com/Redtenetjoker/pokemon-english-app
-- **gh-pages 分支**: 部署专用分支
-
-### 📝 更新日志
-
-**v2.0 (2026-04-05)**
-- ✅ Pokemon 精灵图替换 emoji
-- ✅ 词汇扩充到 120 词
-- ✅ UI 全面 Pokemon 主题化
-- ✅ CSS 动画效果 (shake/bounce/hatch/celebrate)
-- ✅ 家长端数据可视化
-
-**v1.0 (早期版本)**
-- 基础 Quiz 功能
-- Pokemon 收集功能
-- FSRS 复习系统
-- emoji 作为图片 (已废弃)
-
-### 🎯 待完成 (20%)
-
-- [ ] 添加更多 Pokemon (152-251)
-- [ ] 声音效果 (答对/答错音效)
-- [ ] 家长端添加/删除单词功能
-- [ ] 成就系统
-- [ ] 更多动画效果
-- [ ] 数据导出功能
+### 待完成
+- [ ] Quiz多模式支持（en2cn/cn2en/mixed）
+- [ ] MiniMax配额刷新（00:00）后继续生成剩余配图
+- [ ] UI整体优化达到80%

@@ -58,25 +58,57 @@ export const useQuizSession = () => {
   return useReducer(learningReducer, initialState)
 }
 
+// Quiz mode types
+export type QuizMode = 'en2cn' | 'cn2en' | 'mixed'
+
+// Extended question with mode info
+export interface QuizQuestionEx extends QuizQuestion {
+  mode: QuizMode
+  questionText: string
+  options: string[]
+  correctIndex: number
+}
+
 export const generateQuizQuestions = (
   words: QuizQuestion['vocab'][],
-  count: number
-): QuizQuestion[] => {
+  count: number,
+  mode: QuizMode = 'mixed'
+): QuizQuestionEx[] => {
   const selected = words.slice(0, count)
   
   return selected.map(vocab => {
-    // Pick 3 wrong answers from other words
-    const otherWords = words.filter(w => w.id !== vocab.id)
-    const shuffledOthers = otherWords.sort(() => Math.random() - 0.5).slice(0, 3)
+    const otherWords = words.filter(w => w.id !== vocab.id).sort(() => Math.random() - 0.5).slice(0, 3)
     
-    // Create options with correct answer mixed in
-    const options = [...shuffledOthers.map(w => w.meaning), vocab.meaning]
-    const shuffled = options.sort(() => Math.random() - 0.5)
-    const correctIndex = shuffled.indexOf(vocab.meaning)
+    // Determine question type for this specific question
+    let questionMode: QuizMode
+    if (mode === 'mixed') {
+      questionMode = Math.random() < 0.5 ? 'en2cn' : 'cn2en'
+    } else {
+      questionMode = mode
+    }
+    
+    let questionText: string
+    let correctAnswer: string
+    let wrongOptions: string[]
+    
+    if (questionMode === 'en2cn') {
+      questionText = vocab.word
+      correctAnswer = vocab.meaning
+      wrongOptions = otherWords.map(w => w.meaning)
+    } else {
+      questionText = vocab.meaning
+      correctAnswer = vocab.word
+      wrongOptions = otherWords.map(w => w.word)
+    }
+    
+    const options = [correctAnswer, ...wrongOptions].sort(() => Math.random() - 0.5)
+    const correctIndex = options.indexOf(correctAnswer)
     
     return {
       vocab,
-      options: shuffled,
+      mode: questionMode,
+      questionText,
+      options,
       correctIndex,
     }
   })
