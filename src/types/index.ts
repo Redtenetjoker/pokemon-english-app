@@ -10,7 +10,7 @@ export interface VocabWord {
   meaning: string
   phonetic: string // syllable breakdown e.g. "c-a-t"
   pokemonId: number // PokeAPI Pokemon ID for sprite
-  level: 'A' | 'B' | 'C' | 'D' | 'E' // RAZ level
+  level: 'A' | 'B' | 'C' | 'D' | 'E' | 'F' // RAZ level
 }
 
 // FSRS Card state stored in IndexedDB

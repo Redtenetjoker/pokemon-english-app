@@ -24,7 +24,9 @@ const LearningSession: React.FC<Props> = ({ onComplete }) => {
     const count = QUESTION_COUNTS[mode]
     // Use mixed mode for variety: en2cn, cn2en, mixed
     const quizMode: QuizMode = 'mixed'
-    const words = razWords.slice(0, Math.min(count * 2, razWords.length))
+    // Shuffle all words first, then pick count * 2 for true randomness across all levels
+    const shuffled = [...razWords].sort(() => Math.random() - 0.5)
+    const words = shuffled.slice(0, Math.min(count * 2, shuffled.length))
     const questions = generateQuizQuestions(words, count, quizMode)
     dispatch({ type: 'START_SESSION', mode, questions })
   }, [dispatch])
